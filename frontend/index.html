@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fitbit Workout Dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="styles/style.css">
+    </head>
+    <body class="bg-light">
+        <div class="container py-4">
+            <h1>Fitbit Workout Dashboard</h1>
+
+            <table id="workoutsTable">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Start Time</th>
+                        <th>Duration (min)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Workouts listed here -->
+                </tbody>
+            </table>
+            <div id="workoutSection">
+                <div id="workoutDetail" style="display:none;">
+                    <h2>Workout Details</h2>
+                    <div id="detailCard">
+                        <p><strong>Workout ID:</strong> <span id="workoutID"></span></p>
+                        <p><strong>Activity:</strong> <span id="activity"></span></p>
+                        <p><strong>Start Time:</strong> <span id="start"></span></p>
+                        <p><strong>Duration:</strong> <span id="duration"></span> minutes</p>
+                        <p><strong>Average HR:</strong> <span id="heartrate"></span> BPM</p>
+                        <p><strong>Calories:</strong> <span id="calories"></span> kcal</p>
+                        <p><strong>Steps:</strong> <span id="steps"></span></p>
+                        <p><strong>Device:</strong> <span id="device"></span></p>
+                    </div>
+                </div>
+
+                <div id="reflectionForm" style="display:none;">
+                    <h2>Reflection</h2>
+                    <form id="reflection">
+                        <h3>During Workout (1-5):</h3>
+                        <label>
+                            Mood:
+                            <input type="number" id="mood" min="1" max="5" required>
+                        </label>
+                        <label>
+                            Hydration:
+                            <input type="number" id="hydration" min="1" max="5" required>
+                        </label>
+                        <label>
+                            Perceived Effort:
+                            <input type="number" id="effort" min="1" max="5" required>
+                        </label>
+                        <label>
+                            Satisfaction:
+                            <input type="number" id="satisfaction" min="1" max="5" required>
+                        </label>
+                        <h3>After Workout (1-5):</h3>
+                        <label>
+                            Sleep Quality:
+                            <input type="number" id="sleep" min="1" max="5" required>
+                        </label>
+                        <label>
+                            Fatigue:
+                            <input type="number" id="fatigue" min="1" max="5" required>
+                        </label>
+                        <label>
+                            Motivation for Next Workout:
+                            <input type="number" id="motivation" min="1" max="5" required>
+                        </label>
+                        <button type="submit">Submit Reflection</button>
+                    </form>
+                </div>
+            </div>
+            <script>
+                const workoutsTable = document.getElementById('workoutsTable').querySelector('tbody');
+                const workoutDetail = document.getElementById('workoutDetail');
+                const reflectionForm = document.getElementById('reflectionForm');
+                const detailJSON = document.getElementById('detailJSON');
+
+                let selectedWorkout = null;
+
+                // Fetch last 10 workouts
+                async function loadWorkouts() {
+                    const res = await fetch('http://localhost:3000/workouts');
+                    const data = await res.json();
+                    const workouts = data.activities.slice(0, 10);
+
+                    workoutsTable.innerHTML = '';
+                    workouts.forEach(w => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${w.activityName}</td>
+                            <td>${new Date(w.startTime).toLocaleString()}</td>
+                            <td>${Math.round(w.duration / 60000)}</td>
+                        `;
+                        tr.addEventListener('click', () => selectWorkout(w.logId));
+                        workoutsTable.appendChild(tr);
+                    });
+                }
+
+                // Fetch single workout
+                async function selectWorkout(logId) {
+                    const res = await fetch(`http://localhost:3000/workouts/${logId}`);
+                    const data = await res.json();
+                    selectedWorkout = data;
+
+                    workoutDetail.style.display = 'block';
+                    reflectionForm.style.display = 'block';
+                    document.getElementById('workoutSection').style.display = 'flex';
+
+                    document.getElementById('workoutID').textContent = data.logId;
+                    document.getElementById('activity').textContent = data.activityName;
+                    document.getElementById('start').textContent = new Date(data.startTime).toLocaleString();
+                    document.getElementById('duration').textContent = Math.round(data.duration / 60000);
+                    document.getElementById('heartrate').textContent = data.averageHeartRate || 'N/A';
+                    document.getElementById('calories').textContent = data.calories || 'N/A';
+                    document.getElementById('steps').textContent = data.steps || 'N/A';
+                    document.getElementById('device').textContent = data.source?.name || "Unknown";
+                }
+
+                // Handle reflection form
+                document.getElementById('reflection').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const mood = document.getElementById('mood').value;
+                    const hydration = document.getElementById('hydration').value;
+                    const effort = document.getElementById('effort').value;
+                    const satisfaction = document.getElementById('satisfaction').value;
+                    const sleep = document.getElementById('sleep').value;
+                    const fatigue = document.getElementById('fatigue').value;
+                    const motivation = document.getElementById('motivation').value;
+                    
+
+                    // Currently just logging in console
+                    console.log({
+                        workoutLogId: selectedWorkout.logId,
+                        mood,
+                        hydration,
+                        effort,
+                        satisfaction,
+                        sleep,
+                        fatigue,
+                        motivation,
+                        data: selectedWorkout
+                    });
+
+                    alert('Reflection submitted! (in console)');
+                });
+
+                loadWorkouts();
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        </div>
+    </body>
+</html>
