@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 
@@ -66,6 +67,8 @@ async function getValidAccessToken() {
     return tokens.access_token;
 }
 
+// Homepage
+app.use('/', express.static(path.join(__dirname, '../frontend')));
 
 // Start OAuth
 app.get('/auth', (req, res) => {
@@ -175,4 +178,32 @@ app.get('/workouts', async (req, res) => {
         res.send('Error fetching workouts');
     }
     
+});
+
+// Single Workout Endpoint
+app.get('/workouts/:logId', async (req, res) => {
+    try {
+        const token = await getValidAccessToken();
+        const logId = req.params.logId;
+
+        const date = new Date();
+        date.setDate(date.getDate() - 30);
+        const afterDate = date.toISOString().split('T')[0];
+
+        const url = `https://api.fitbit.com/1/user/-/activities/list.json?afterDate=${afterDate}&sort=desc&limit=100&offset=0`
+
+        const response = await axios.get(url, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const workout = response.data.activities.find(w => w.logId == logId);
+
+        if (!workout) return res.status(404).send({ error: 'Workout not found' });
+
+        res.json(workout);
+
+    } catch(error) {
+        console.error(error.response?.data || error.message);
+        res.status(500).json({ error: error.response?.data || error.message });
+    }
 });
