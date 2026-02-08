@@ -93,6 +93,10 @@ button {
     cursor: pointer;
 }
 
+.star-rating:hover {
+    font-size: 1.6rem;
+}
+
 .star-rating i {
     color: #ccc;
     margin-right: 5px;
