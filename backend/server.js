@@ -5,6 +5,7 @@ const path = require('path');
 
 const workoutsRoute = require('./routes/workouts');
 const authRoute = require('./routes/auth');
+const reflectionsRoute = require('./routes/reflections');
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.use('/', express.static(path.join(__dirname, '../frontend')));
 // API Routes
 app.use('/', authRoute);
 app.use('/workouts', workoutsRoute);
+
+// Reflection Route
+app.use('/reflections', reflectionsRoute);
 
 // Fallback Route
 app.use((req, res) => {
