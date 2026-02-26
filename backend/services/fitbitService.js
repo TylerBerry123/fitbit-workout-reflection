@@ -23,11 +23,11 @@ async function getRecentWorkouts(limit = 10) {
 }
 
 async function getWorkoutById(logId) {
-    const workouts = await getRecentWorkouts(10);
-    return workouts.find(w => w.logId === logId);
+    const workouts = await getRecentWorkouts(50);
+    return workouts.find(w => String(w.logId) == String(logId)); // do not secure check - number vs string
 }
 
 module.exports = {
     getRecentWorkouts,
     getWorkoutById
-};
+}

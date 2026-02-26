@@ -6,6 +6,7 @@ const path = require('path');
 const workoutsRoute = require('./routes/workouts');
 const authRoute = require('./routes/auth');
 const reflectionsRoute = require('./routes/reflections');
+const insightsRoute = require('./routes/insights');
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use('/workouts', workoutsRoute);
 
 // Reflection Route
 app.use('/reflections', reflectionsRoute);
+
+// Insights Route
+app.use('/insights', insightsRoute);
 
 // Fallback Route
 app.use((req, res) => {
