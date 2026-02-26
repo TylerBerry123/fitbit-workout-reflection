@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { getValidAccessToken } = require('./tokenService.js');
 
-async function getRecentWorkouts(limit = 10) {
+async function getRecentWorkouts(limit = 50) {
     const token = await getValidAccessToken();
 
     const date = new Date();

@@ -5,7 +5,7 @@ const { getRecentWorkouts, getWorkoutById } = require('../services/fitbitService
 
 router.get('/', async (req, res) => {
     try {
-        const workouts = await getRecentWorkouts(10);
+        const workouts = await getRecentWorkouts(50);
         res.json({ activities: workouts });
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../database/db');
 
 const { generateInsights } = require('../services/ruleEngine');
+const { getWorkoutById } = require('../services/fitbitService');
 
 // Get reflections
 router.get('/', (req, res) => {
@@ -27,7 +28,7 @@ router.get('/:workoutLogId', (req, res) => {
 });
 
 // Save reflection
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const {
         workoutLogId,
         mood,
@@ -68,35 +69,70 @@ router.post('/', (req, res) => {
         fatigue,
         motivation,
         pain
-    ], function (err) {
+    ], async function (err) {
 
         if (err) {
             console.error(err);
             return res.status(500).json({ error: err.message });
         }
 
-        res.json({ success: true });
-    });
+        try {
 
-    const insights = generateInsights({
-        mood: Number(mood),
-        hydration: Number(hydration),
-        effort: Number(effort),
-        satisfaction: Number(satisfaction),
-        sleep: Number(sleep),
-        fatigue: Number(fatigue),
-        motivation: Number(motivation),
-        pain: Number(pain),
-    });
+            const workout = await getWorkoutById(workoutLogId);
 
-    insights.forEach(insight => {
-        db.run(
-            `INSERT INTO insights (workout_log_id, rule_name, message)
-            VALUES(?, ?, ?)`,
-            [String(workoutLogId), insight.rule, insight.message]
-        );
+            const insights = generateInsights({
+                mood: Number(mood),
+                hydration: Number(hydration),
+                effort: Number(effort),
+                satisfaction: Number(satisfaction),
+                sleep: Number(sleep),
+                fatigue: Number(fatigue),
+                motivation: Number(motivation),
+                pain: Number(pain),
+            }, workout);
+
+            insights.forEach(insight => {
+                db.run(
+                    `INSERT INTO insights (workout_log_id, rule_id, rule_name, message, rationale, priority)
+                    VALUES(?, ?, ?, ?, ?, ?)`,
+                    [
+                        String(workoutLogId),
+                        insight.rule_id,
+                        insight.rule_name,
+                        insight.message,
+                        insight.rationale,
+                        insight.priority
+                    ]
+                );
+            });
+
+            return res.json({ success: true });
+
+        } catch (err) {
+            console.error('Insight generation error:', err);
+            return res.status(500).json({ error: err.message });
+        }
     });
-    
+});
+
+router.delete('/:workoutLogId', (req, res) => {
+    const id = String(req.params.workoutLogId);
+
+    db.run(
+        "DELETE FROM reflections WHERE workout_log_id = ?",
+    [id],
+    function (err) {
+        if (err) {
+            console.error('Delete error: ', err);
+            return res.status(500).json({ error: err.message });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({ error: 'Reflection not found' });
+        }
+
+        return res.json({ success: true })
+    });
 });
 
 module.exports = router;
