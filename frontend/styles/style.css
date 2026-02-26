@@ -12,12 +12,37 @@ h1 {
     text-align: center;
 }
 
+/* --- Tabs --- */
+.nav-tabs {
+    border-bottom: none !important;
+}
+
+.nav-tabs .nav-link {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px;
+    margin-right: 6px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.nav-tabs .nav-link.active {
+    background: #0095b2 !important;
+    color: white !important;
+}
+
+
 /* --- Tables --- */
 #workoutsTable {
     background-color: rgba(212, 212, 212, 0.4);
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 20px;
 }
 
 #workoutsTable th,
@@ -35,6 +60,22 @@ h1 {
     cursor: pointer;
 }
 
+.table-container {
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #0095b2 lightblue;
+}
+
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
+
 .reflected {
     background-color: rgba(0, 255, 0, 0.15)
 }
@@ -49,6 +90,17 @@ h1 {
     background-color: #00849f;
 }
 
+.btn-outline-white {
+    color: white !important;
+    border: 1px solid white !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-white:hover {
+    background-color: white !important;
+    color: green !important;
+}
+
 /* --- Cards --- */
 .card {
     background-color: rgba(212, 212, 212, 0.4);
@@ -58,9 +110,15 @@ h1 {
 
 /* --- Insights --- */
 .highlighted-insight {
-    border: 2px solid #d06efd;
+    border: 2px solid lightgreen;
     background-color: rgba(13, 110, 253, 0.1);
     transition: background-color 0.5s ease;
+}
+
+.rationale {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    border-radius: 6px;
 }
 
 /* --- Hidden State --- */
@@ -97,4 +155,45 @@ h1 {
 .star-rating.disabled i {
     cursor: default;
     opacity: 0.7;
+}
+
+/* --- Trend Boxes ---*/
+.trend-box {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    min-width: 180px;
+    text-align: center;
+    color: white;
+    flex: 1 1 180px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.trend-rule-id {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.trend-rule-name {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.trend-count {
+    font-weight: 600;
+}
+
+.trend-percentage {
+    font-size: 1.1rem;
+}
+
+.trend-priority-1 {
+    color: #dc3545;
+}
+
+.trend-priority-2 {
+    color: #ffc107;
+}
+
+.trend-priority-4 {
+    color: #0d6efd;
 }

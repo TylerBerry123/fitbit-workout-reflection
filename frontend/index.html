@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Fitbit Reflective Feedback System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/logo.png">
 
     <!--- Bootstrap --->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,25 +32,26 @@
 
     <!--- Workouts View --->
     <div id="workoutsView">
-
-        <!-- Workouts Table -->
-        <table id="workoutsTable">
-            <thead>
-                <tr>
-                    <th>Activity</th>
-                    <th>Start Time</th>
-                    <th>Duration (min)</th>
-                </tr>
-            </thead>
-            <tbody><!-- Workouts listed here --></tbody>
-        </table>
+        <div class="table-container">
+            <!-- Workouts Table -->
+            <table id="workoutsTable">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Start Time</th>
+                        <th>Duration (min)</th>
+                    </tr>
+                </thead>
+                <tbody><!-- Workouts listed here --></tbody>
+            </table>
+        </div>
 
         <!-- Workout + Reflections -->
         <div id="workoutSection" class="row g-4 hidden">
 
             <!-- Workout Details -->
             <div id="workoutDetail" class="col-md-6">
-                <div class="card p-3">
+                <div class="card p-3 mt-3">
                     <h2 class="h5">Workout Details</h2>
                     <hr>
                     <p><strong>Workout ID:</strong> <span id="workoutID"></span></p>
@@ -65,7 +67,7 @@
 
             <!-- Reflection Form -->
             <div id="reflectionForm" class="col-md-6">
-                <div class="card p-3">
+                <div class="card p-3 mt-3">
                     <h2 class="h5">Reflection</h2>
                     <hr>
 
@@ -100,6 +102,24 @@
 
     <!--- Insights View --->
     <div id="insightsView" class="hidden">
+
+        <div id="trendsContainer" class="card p-3 mb-3 hidden">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">General Trends</h4>
+                <button
+                    id="toggleTrendsBtn"
+                    class="btn btn-sm btn-outline-white">
+                    Show
+                </button>
+            </div>
+            
+
+            <div id="trendsContentWrapper" class="hidden">
+                <hr>
+                <div id="trendsContent"></div>
+            </div>
+
+        </div>
 
         <div class="card p-3">
             <h4>Generated Insights</h4>

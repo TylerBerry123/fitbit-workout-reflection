@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         workoutsView.classList.add('hidden');
         insightsView.classList.remove('hidden');
 
+        await loadTrends();
         await loadInsights();
     });
 
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let selectedWorkout = null;
+    let selectedWorkoutRow = null;
 
     init();
 
@@ -55,11 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadWorkouts();
     }
 
+    function daysAgoFrom(dateString) {
+        const workoutDate = new Date(dateString);
+        const today = new Date();
+
+        // Removing time for accurate day difference
+        workoutDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0)
+
+        const diffMs = today - workoutDate;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        return `${diffDays} days ago`;
+    }
+
     async function loadWorkouts() {
         try {
             const workoutsResponse = await fetch('/workouts');
             const workoutsData = await workoutsResponse.json();
-            const workouts = workoutsData.activities.slice(0, 10);
+            const workouts = workoutsData.activities;
             cachedWorkouts = workouts;
 
             const reflectionsRes = await fetch('/reflections');
@@ -79,7 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (reflectedIds.has(String(w.logId))) tr.classList.add('reflected');
 
-                tr.addEventListener('click', () => displayWorkout(w));
+                tr.addEventListener('click', () => {
+                    selectedWorkoutRow = tr;
+                    displayWorkout(w);
+                });
                 workoutsTableBody.appendChild(tr);
             });
 
@@ -102,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('steps').textContent = workout.steps || 'N/A';
         document.getElementById('device').textContent = workout.source?.name || "Unknown";
 
-        workoutSection.scrollIntoView({ behaviour: 'smooth' });
-        
+       workoutSection.scrollIntoView({ behaviour: 'smooth' });
+
         const res = await fetch(`/reflections/${workout.logId}`);
         const reflection = await res.json();
 
@@ -147,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showReflectionMessage();
         addViewInsightButton();
+        addDeleteReflectionButton();
     }
 
     function enableReflectionForm() {
@@ -161,6 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const existingBtn = document.getElementById('viewInsightBtn');
         if (existingBtn) existingBtn.remove();
+
+        const deleteBtn = document.getElementById('deleteReflectionBtn');
+        if (deleteBtn) deleteBtn.remove();
     }
 
     function showReflectionMessage() {
@@ -189,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         workoutsView.classList.add('hidden');
         insightsView.classList.remove('hidden');
 
+        await loadTrends();
         await loadInsights();
 
         const target = document.getElementById(`insight-${workoutId}`);
@@ -205,11 +231,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const button = document.createElement('button');
         button.id = 'viewInsightBtn';
         button.type = 'button';
-        button.className = 'btn btn-outline-secondary mt-3';
+        button.className = 'btn btn-outline-white mt-3';
         button.textContent = 'View Insight';
 
         button.addEventListener('click', () => {
             switchToInsights(selectedWorkout.logId);
+        });
+
+        reflectionForm.appendChild(button);
+    }
+
+    
+    function addDeleteReflectionButton() {
+        if (document.getElementById('deleteReflectionBtn')) return;
+
+        const button = document.createElement('button');
+        button.id = 'deleteReflectionBtn';
+        button.type = 'button';
+        button.className = 'btn btn-outline-danger mt-3 ms-2';
+        button.textContent = 'Delete Reflection';
+
+        button.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to delete this reflection?')) return;
+
+            try {
+                const res = await fetch(`/reflections/${selectedWorkout.logId}`, { method: 'DELETE' });
+                const data = await res.json();
+                
+                if (data.success) {
+                    enableReflectionForm();
+
+                    document.querySelectorAll('#workoutsTable tbody tr')
+                        .forEach(tr => tr.classList.remove('reflected'));
+
+                    workoutSection.classList.add('hidden');
+
+                    await loadWorkouts();
+                    await loadInsights();
+                }
+            } catch (error) {
+                console.error('Delete error: ', error);
+            }
         });
 
         reflectionForm.appendChild(button);
@@ -245,14 +307,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.success) {
                 disableReflectionForm();
-                window.location.reload();
+                if (selectedWorkoutRow) selectedWorkoutRow.classList.add('reflected');
             }
 
-            //window.location.reload();
         } catch (error) {
             console.error('Error saving reflection: ', error);
         }
     });
+
+    async function loadTrends() {
+        try {
+            const response = await fetch('/insights/trends');
+            const trends = await response.json();
+
+            const container = document.getElementById('trendsContainer');
+            const content = document.getElementById('trendsContent');
+
+            content.innerHTML = '';
+
+            if (!trends || trends.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+
+            const trendsRow = document.createElement('div');
+            trendsRow.className = 'd-flex flex-wrap gap-3';
+
+            trends.forEach(trend => {
+                const trendBox = document.createElement('div');
+                trendBox.className = 'trend-box p-3';
+
+                let priorityClass = '';
+
+                if (Number(trend.priority) === 1) {
+                    priorityClass = 'trend-priority-1';
+                } else if (trend.priority == 2 || trend.priority == 3) {
+                    priorityClass = 'trend-priority-2';
+                } else {
+                    priorityClass = 'trend-priority-4';
+                }
+
+                console.log(trend.rule_id, trend.priority)
+
+                trendBox.innerHTML = `
+                    <div class="trend-rule-id ${priorityClass}">${trend.rule_id}</div>
+                    <div class="trend-rule-name">${trend.rule_name}</div>
+                    <div class="trend-count">${trend.count} times</div>
+                    <div class="trend-percentage">${trend.percentage}%</div>
+                    
+                `;
+
+                trendsRow.appendChild(trendBox);
+            });
+
+            content.appendChild(trendsRow);
+
+        } catch (error) {
+            console.error('Error loading trends: ', error);
+        }
+    }
 
     async function loadInsights() {
         try {
@@ -279,23 +394,102 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.className = 'card mb-3 p-3';
                 div.id = `insight-${group.workout_log_id}`;
 
-                const insightHTML = group.insights
-                    .map(i => `<li><strong>${i.rule_name}</strong>: ${i.message}</li>`)
-                    .join('');
-
-                div.innerHTML = `
-                    <h6>${activityName} (${new Date(startTime).toLocaleString()})</h6>
-                    <ul>${insightHTML}</ul>
-                    <small>Reflected on ${new Date(group.created_at).toLocaleString()}</small>
+                const workoutHeader = `
+                    <h6 class="mb-3">
+                        ${activityName} - ${daysAgoFrom(startTime)}
+                    </h6>
                 `;
+
+                div.innerHTML = workoutHeader;
+
+                group.insights.forEach(insight => {
+                    const insightCard = document.createElement('div');
+                    insightCard.className = 'border rounded p-3 mb-2 bg-primary bg-opacity-25 text-white';
+
+                    let priorityClass = '';
+
+                    if (insight.priority === 1) {
+                        priorityClass = 'bg-danger';
+                    } else if (insight.priority === 2 || insight.priority === 3) {
+                        priorityClass = 'bg-warning';
+                    } else {
+                        priorityClass = 'bg-primary';
+                    }
+
+                    insightCard.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center mb-2>
+                            <span>
+                                <span class="badge bg-secondary me-2">
+                                ${insight.rule_id}
+                                </span>
+                                <strong>${insight.rule_name}</strong>
+                            </span>
+                            <span class="badge ${priorityClass}">
+                                Priority ${insight.priority}
+                            </span>
+                        </div>
+
+                        <p class="mb-2">${insight.message}</p>
+
+                        <button class="btn btn-sm btn-outline-white toggle-rationale">
+                            Show Rationale
+                        </button>
+
+                        <div class="rationale mt-2 hidden">
+                            <small>${insight.rationale}</small>
+                        </div> 
+                    `;
+
+                    div.appendChild(insightCard);
+                });
+
+                const reflectionFooter = document.createElement('div');
+                reflectionFooter.className = 'mt-2 text-end';
+
+                reflectionFooter.innerHTML = `
+                                    <small>Reflected on: ${new Date(group.created_at).toLocaleDateString()}</small>
+                `;
+
+                div.appendChild(reflectionFooter);
 
                 container.appendChild(div);
             }
 
         } catch(error) {
             console.error('Error loading insights:', error);
+
+            const container = document.getElementById('insightsContainer');
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    Failed to load insights.
+                </div>
+            `;
         }
     }
+
+    document.addEventListener('click', (e) => {
+
+        // Rationale Togle
+        if (e.target.classList.contains('toggle-rationale')) {
+
+            const rationaleDiv = e.target.nextElementSibling;
+
+            rationaleDiv.classList.toggle('hidden');
+
+            e.target.textContent = rationaleDiv.classList.contains('hidden') ? 'Show Rationale' : 'Hide Rationale';
+        }
+
+        // Trends Toggle
+        if (e.target.id === 'toggleTrendsBtn') {
+            const wrapper = document.getElementById('trendsContentWrapper');
+
+            wrapper.classList.toggle('hidden');
+
+            e.target.textContent = wrapper.classList.contains('hidden') ? 'Show' : 'Hide';
+        }
+    });
+
+    
 
     function renderMetrics(containerId, metrics) {
         const container = document.getElementById(containerId);
