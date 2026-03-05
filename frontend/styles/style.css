@@ -2,7 +2,8 @@
 
 body {
     font-family: 'Funnel Sans', sans-serif;
-    background: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+    background: linear-gradient(to top, #005b8d 0%, #002a3b 100%); /* FITBIT COLORS */
+    background-color: #1e1e2c !important;
     background-attachment: fixed;
     color: white;
 }
@@ -33,7 +34,7 @@ h1 {
 }
 
 .nav-tabs .nav-link.active {
-    background: #0095b2 !important;
+    background: #1cb0b8 !important; /* FITBIT COLOR */
     color: white !important;
 }
 
@@ -52,11 +53,11 @@ h1 {
 }
 
 #workoutsTable th {
-    background-color: #0095b2
+    background-color: #1cb0b8 /* FITBIT COLOR */
 }
 
 #workoutsTable tr:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(28, 176, 184, 0.3); /* FITBIT COLOR */
     cursor: pointer;
 }
 
@@ -66,7 +67,7 @@ h1 {
     border: 1px solid #dee2e6;
     border-radius: 6px;
     scrollbar-width: thin;
-    scrollbar-color: #0095b2 lightblue;
+    scrollbar-color: #1cb0b8 lightblue; /* FITBIT COLOR */
 }
 
 .table-container thead th {
@@ -77,7 +78,7 @@ h1 {
 }
 
 .reflected {
-    background-color: rgba(0, 255, 0, 0.15)
+    background-color: rgba(0, 255, 0, 0.15);
 }
 
 /* --- Buttons --- */
@@ -103,7 +104,7 @@ h1 {
 
 /* --- Cards --- */
 .card {
-    background-color: rgba(212, 212, 212, 0.4);
+    background-color: rgba(166, 166, 166, 0.4);
     color: white;
     border: 1px solid white;
 }
@@ -116,7 +117,7 @@ h1 {
 }
 
 .rationale {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.2);
     padding: 8px;
     border-radius: 6px;
 }

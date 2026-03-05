@@ -349,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     priorityClass = 'trend-priority-4';
                 }
 
-                console.log(trend.rule_id, trend.priority)
 
                 trendBox.innerHTML = `
                     <div class="trend-rule-id ${priorityClass}">${trend.rule_id}</div>
@@ -403,8 +402,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.innerHTML = workoutHeader;
 
                 group.insights.forEach(insight => {
-                    const insightCard = document.createElement('div');
-                    insightCard.className = 'border rounded p-3 mb-2 bg-primary bg-opacity-25 text-white';
 
                     let priorityClass = '';
 
@@ -416,6 +413,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         priorityClass = 'bg-primary';
                     }
 
+                    const insightCard = document.createElement('div');
+                    insightCard.className = `border rounded p-3 mb-2 ${priorityClass} bg-opacity-25 text-white`;
+
                     insightCard.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center mb-2>
                             <span>
@@ -424,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </span>
                                 <strong>${insight.rule_name}</strong>
                             </span>
-                            <span class="badge ${priorityClass}">
+                            <span class="badge ${priorityClass} bg-opacity-50">
                                 Priority ${insight.priority}
                             </span>
                         </div>
