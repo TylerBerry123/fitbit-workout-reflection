@@ -401,6 +401,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.innerHTML = workoutHeader;
 
+                const insightsRow = document.createElement('div');
+                insightsRow.className = 'd-flex gap-3 mb-2';
+
                 group.insights.forEach(insight => {
 
                     let priorityClass = '';
@@ -440,8 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div> 
                     `;
 
-                    div.appendChild(insightCard);
+                    insightsRow.appendChild(insightCard);
                 });
+
+                div.appendChild(insightsRow);
 
                 const reflectionFooter = document.createElement('div');
                 reflectionFooter.className = 'mt-2 text-end';

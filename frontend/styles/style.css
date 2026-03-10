@@ -122,6 +122,12 @@ h1 {
     border-radius: 6px;
 }
 
+.insight-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    flex: 1 1 0;
+    min-height: 120px;
+}
+
 /* --- Hidden State --- */
 .hidden {
     display: none !important;
@@ -141,7 +147,6 @@ h1 {
 
 .star-rating i:hover{
     transform: scale(1.2);
-
 }
 
 .star-rating i.filled {
