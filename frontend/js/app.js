@@ -336,22 +336,21 @@ document.addEventListener('DOMContentLoaded', () => {
             trendsRow.className = 'd-flex flex-wrap gap-3';
 
             trends.forEach(trend => {
-                const trendBox = document.createElement('div');
-                trendBox.className = 'trend-box p-3';
-
                 let priorityClass = '';
 
                 if (Number(trend.priority) === 1) {
-                    priorityClass = 'trend-priority-1';
+                    priorityClass = 'bg-danger';
                 } else if (trend.priority == 2 || trend.priority == 3) {
-                    priorityClass = 'trend-priority-2';
+                    priorityClass = 'bg-warning';
                 } else {
-                    priorityClass = 'trend-priority-4';
+                    priorityClass = 'bg-primary';
                 }
 
+                const trendBox = document.createElement('div');
+                trendBox.className = `trend-box ${priorityClass} p-3 bg-opacity-25`;
 
                 trendBox.innerHTML = `
-                    <div class="trend-rule-id ${priorityClass}">${trend.rule_id}</div>
+                    <div class="trend-rule-id">${trend.rule_id}</div>
                     <div class="trend-rule-name">${trend.rule_name}</div>
                     <div class="trend-count">${trend.count} times</div>
                     <div class="trend-percentage">${trend.percentage}%</div>

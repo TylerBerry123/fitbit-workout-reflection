@@ -172,6 +172,7 @@ h1 {
     color: white;
     flex: 1 1 180px;
     transition: transform 0.2s ease, background-color 0.2s ease;
+    border: 1px solid white;
 }
 
 .trend-rule-id {
@@ -192,7 +193,7 @@ h1 {
     font-size: 1.1rem;
 }
 
-.trend-priority-1 {
+/*.trend-priority-1 {
     color: #dc3545;
 }
 
@@ -202,4 +203,4 @@ h1 {
 
 .trend-priority-4 {
     color: #0d6efd;
-}
+}/*
