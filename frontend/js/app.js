@@ -30,19 +30,31 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadInsights();
     });
 
-    const duringMetrics = [
-        { name: 'mood', label: 'Mood' },
-        { name: 'hydration', label: 'Hydration' },
-        { name: 'effort', label: 'Effort' },
-        { name: 'satisfaction', label: 'Satisfaction' }
-    ];
+    const METRIC_GROUPS = {
+        trainingLoad: [
+            { name: 'effort', label: 'Effort'},
+            { name: 'satisfaction', label: 'Satisfaction'}
+        ],
 
-    const afterMetrics = [
-        { name: 'sleep', label: 'Sleep Quality' },
-        { name: 'fatigue', label: 'Fatigue' },
-        { name: 'motivation', label: 'Motivation for Next Workout' },
-        { name: 'pain', label: 'Pain / Soreness' }
-    ];
+        recoveryStatus: [
+            { name: 'fatigue', label: 'Fatigue'},
+            { name: 'pain', label: 'Pain / Soreness'},
+            { name: 'sleep', label: 'Sleep Quality'}
+        ],
+        
+        psychologicalState: [
+            { name: 'mood', label: 'Mood'},
+            { name: 'motivation', label: 'Motivation'}
+        ],
+
+        behaviouralFactors: [
+            { name: 'hydration', label: 'Hydration'}
+        ]
+    };
+
+    const REFLECTION_METRICS = Object.values(METRIC_GROUPS)
+        .flat()
+        .map(metric => metric.name);
 
     let selectedWorkout = null;
     let selectedWorkoutRow = null;
@@ -50,8 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
     async function init() {
-        renderMetrics('duringMetrics', duringMetrics);
-        renderMetrics('afterMetrics', afterMetrics);
+        renderMetrics('trainingLoadMetrics', METRIC_GROUPS.trainingLoad);
+        renderMetrics('recoveryStatusMetrics', METRIC_GROUPS.recoveryStatus);
+        renderMetrics('psychologicalMetrics', METRIC_GROUPS.psychologicalState);
+        renderMetrics('behaviouralMetrics', METRIC_GROUPS.behaviouralFactors);
 
         initialiseStarRatings();
         await loadWorkouts();
