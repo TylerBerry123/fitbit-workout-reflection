@@ -4,7 +4,7 @@ const RULES = [
         id: 'R01',
         name: 'High Fatigue + High Effort',
         priority: 1,
-        condition: (r) => r.fatigue >= 4 && r.effort >=4,
+        condition: (r) => r.fatigue >= 4 && r.effort >= 4,
         message: 'Consider prioritising recovery before your next workout.',
         rationale: 'High subjective fatigue combined with high exertion may indicate inadequate recovery and increased training stress.'
     }, // Kellmann (2010), Foster (2001)
@@ -12,7 +12,7 @@ const RULES = [
         id: 'R02',
         name: 'Poor Sleep + High Fatigue',
         priority: 2,
-        condition: (r) => r.sleep <= 2 && r.fatigue >=4,
+        condition: (r) => r.sleep <= 2 && r.fatigue >= 4,
         message: 'Poor sleep and high fatigue suggest your body may not have fully recovered. Consider lighter training or rest.',
         rationale: 'Sleep plays a critical role in physiological recovery and fatigue management.'
     }, // Halson (2014), Kellmann (2010)
@@ -46,7 +46,7 @@ const RULES = [
         priority: 4,
         condition: (r) => r.effort >= 3 && r.satisfaction >= 4 && r.pain <= 3,
         message: 'This session reflects a balanced workout with meaningful effort and a positive exercise experience.',
-        rationale: 'Positive affective responses to exercise support continued engagement in physical activity..'
+        rationale: 'Positive affective responses to exercise support continued engagement in physical activity.'
     }, // Foster (2001), Ekkekakis (2003)
 
 // Objective Rules
@@ -113,7 +113,7 @@ const RULES = [
         name: 'Short Duration + High Fatigue',
         priority: 2,
         condition: (r, w) => w.duration && (w.duration / 60000) < 20 && r.fatigue >= 4,
-        message: 'High fatigue following a short workout may indicate insufficient recovery',
+        message: 'High fatigue following a short workout may indicate insufficient recovery.',
         rationale: 'Experiencing high fatigue after low-duration training may reflect cumulative fatigue or poor recovery status.'
     } // Kellmann (2010), Foster (2001)
 ]

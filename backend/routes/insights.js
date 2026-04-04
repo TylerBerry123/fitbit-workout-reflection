@@ -50,7 +50,6 @@ router.get('/', (req, res) => {
         (err, rows) => {
             if (err) return res.status(500).json({ error: err.message });
 
-
             const grouped = {};
 
             rows.forEach(row => {

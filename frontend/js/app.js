@@ -52,10 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    const REFLECTION_METRICS = Object.values(METRIC_GROUPS)
-        .flat()
-        .map(metric => metric.name);
-
     let selectedWorkout = null;
     let selectedWorkoutRow = null;
 
@@ -158,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             input.value = reflection[key];
 
-            const container = input.previousElementSibling; // .star-rating
+            const container = input.previousElementSibling;
             const stars = container.querySelectorAll('i');
 
             stars.forEach(star => {
@@ -254,8 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         reflectionForm.appendChild(button);
     }
-
-    
+  
     function addDeleteReflectionButton() {
         if (document.getElementById('deleteReflectionBtn')) return;
 
@@ -390,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = '';
 
             if (!groupedInsights || groupedInsights.length === 0) {
-                container.innerHTML = '<p>No insights available yet.<p>';
+                container.innerHTML = '<p>No insights available yet.</p>';
                 return;
             }
 
@@ -433,11 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     insightCard.className = `border rounded p-3 mb-2 ${priorityClass} bg-opacity-25 text-white`;
 
                     insightCard.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-center mb-2>
-                            <span>
-                                <span class="badge bg-secondary me-2">
-
-                                </span>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
                                 <strong>${insight.rule_name}</strong>
                             </span>
                             <span class="badge ${priorityClass} bg-opacity-50">
@@ -465,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reflectionFooter.className = 'mt-2 text-end';
 
                 reflectionFooter.innerHTML = `
-                                    <small>Reflected on: ${new Date(group.created_at).toLocaleDateString()}</small>
+                    <small>Reflected on: ${new Date(group.created_at).toLocaleDateString()}</small>
                 `;
 
                 div.appendChild(reflectionFooter);
@@ -487,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
 
-        // Rationale Togle
+        // Rationale Toggle
         if (e.target.classList.contains('toggle-rationale')) {
 
             const rationaleDiv = e.target.nextElementSibling;
@@ -506,8 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.textContent = wrapper.classList.contains('hidden') ? 'Show' : 'Hide';
         }
     });
-
-    
 
     function renderMetrics(containerId, metrics) {
         const container = document.getElementById(containerId);

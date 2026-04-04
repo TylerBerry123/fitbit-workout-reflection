@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
         try {
 
             const workout = await getWorkoutById(workoutLogId);
-
+            
             const insights = generateInsights({
                 mood: Number(mood),
                 hydration: Number(hydration),
