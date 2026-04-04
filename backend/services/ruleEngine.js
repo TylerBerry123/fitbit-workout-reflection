@@ -108,7 +108,7 @@ const RULES = [
         message: 'High training load combined with fatigue may increase the risk of overtraining. Consider prioritising recovery.',
         rationale: 'Combining high workload with fatigue can indicate inadequate recovery.'
     }, // Kellmann (2010), Foster (2001)
-        {
+    {
         id: 'R14',
         name: 'Short Duration + High Fatigue',
         priority: 2,
