@@ -11,9 +11,7 @@ const REDIRECT_URI = process.env.FITBIT_REDIRECT;
 router.get('/auth', (req, res) => {
     const scopes = [
         'activity',
-        'heartrate',
-        'sleep',
-        'profile'
+        'heartrate'
     ].join(' ');
 
     const authUrl = 
