@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('steps').textContent = workout.steps || 'N/A';
         document.getElementById('device').textContent = workout.source?.name || "Unknown";
 
-       workoutSection.scrollIntoView({ behaviour: 'smooth' });
+       workoutSection.scrollIntoView({ behavior: 'smooth' });
 
         const res = await fetch(`/reflections/${workout.logId}`);
         const reflection = await res.json();
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = document.getElementById(`insight-${workoutId}`);
 
         if (target) {
-            target.scrollIntoView({ behaviour: 'smooth', block: 'center' });
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
             highlightInsight(target);
         }
     }
@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="d-flex justify-content-between align-items-center mb-2>
                             <span>
                                 <span class="badge bg-secondary me-2">
-                                ${insight.rule_id}
+
                                 </span>
                                 <strong>${insight.rule_name}</strong>
                             </span>

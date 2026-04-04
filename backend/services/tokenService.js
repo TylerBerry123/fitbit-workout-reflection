@@ -2,20 +2,23 @@ require('dotenv').config();
 
 const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
 
 const CLIENT_ID = process.env.FITBIT_CLIENT_ID;
 const CLIENT_SECRET = process.env.FITBIT_CLIENT_SECRET;
 
+const TOKENS_PATH = path.join(__dirname, '../tokens.json');
+
 // Token Management
 function loadTokens() {
-    if (fs.existsSync('tokens.json')) {
-        return JSON.parse(fs.readFileSync('tokens.json'));
+    if (fs.existsSync(TOKENS_PATH)) {
+        return JSON.parse(fs.readFileSync(TOKENS_PATH));
     }
     return null;
 }
 
 function saveTokens(tokens) {
-    fs.writeFileSync('tokens.json', JSON.stringify(tokens, null, 2));
+    fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
 }
 
 async function refreshAccessToken(refreshToken) {

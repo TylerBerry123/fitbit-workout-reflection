@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
 const express = require('express');
 const router = express.Router();
@@ -6,6 +7,8 @@ const router = express.Router();
 const CLIENT_ID = process.env.FITBIT_CLIENT_ID;
 const CLIENT_SECRET = process.env.FITBIT_CLIENT_SECRET;
 const REDIRECT_URI = process.env.FITBIT_REDIRECT;
+
+const TOKENS_PATH = path.join(__dirname, '../tokens.json');
 
 // Start OAuth
 router.get('/auth', (req, res) => {
@@ -58,7 +61,7 @@ router.get('/callback', async (req, res) => {
         };
 
         fs.writeFileSync(
-            '../tokens.json',
+            TOKENS_PATH,
             JSON.stringify(tokens, null, 2)
         );
 
