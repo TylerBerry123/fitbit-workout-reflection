@@ -83,10 +83,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${diffDays} days ago`;
     }
 
+    function showAuthMessage() {
+        workoutsTableBody.innerHTML = `
+            <tr>
+                <td colspan="3" class="text-center p-4">
+                    <h5>Please connect your Fitbit account</h5>
+                    <p>You must authenticate before viewing workouts.<p/>
+                    <a href="/auth" class="btn btn-outline-white mt-2">
+                        Connect Fitbit
+                    </a>
+                </td>
+            </tr>
+        `;
+    }
+
     async function loadWorkouts() {
         try {
             const workoutsResponse = await fetch('/workouts');
             const workoutsData = await workoutsResponse.json();
+
+            if (workoutsData.error) {
+                showAuthMessage();
+                return;
+            }
+
             const workouts = workoutsData.activities;
             cachedWorkouts = workouts;
 

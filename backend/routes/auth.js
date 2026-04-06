@@ -65,7 +65,7 @@ router.get('/callback', async (req, res) => {
             JSON.stringify(tokens, null, 2)
         );
 
-        res.send('Fitbit connected! Tokens saved.');
+        res.redirect('/');
 
     } catch (error) {
         console.error(error.response?.data || error.message);
